@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dispatch System | Mode B</title>
+
+    <link rel="stylesheet"
+          href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+    <link rel="stylesheet" href="/assets/dashboard.css">
+</head>
+
+<body>
+<div class="page">
+
+    <div class="header">
+        <h1>Dispatch System | Mode B</h1>
+        <p>DSA Dispatch Mode: Ambulance → Patient → Hospital</p>
+    </div>
+
+    <div class="grid">
+
+        <!-- Emergency input: same Mode A layout -->
+        <div class="card">
+            <h2>Emergency Input</h2>
+
+            <div class="field full">
+                <label>Current GPS Location</label>
+
+                <div id="gpsStatus" class="info">
+                    Requesting browser location...
+                </div>
+
+                <div style="display:flex;flex-wrap:wrap;gap:12px;
+                            align-items:center;justify-content:space-between;
+                            padding:12px;border:1px solid #d9e2ec;
+                            border-radius:10px;background:#f8fafc;">
+
+                    <div id="gpsCoordinates"
+                         style="line-height:1.7;font-family:monospace;">
+                        Latitude: --<br>
+                        Longitude: --
+                    </div>
+
+                    <button id="refreshLocationButton"
+                            class="secondary" type="button">
+                        Refresh GPS Location
+                    </button>
+                </div>
+
+                <input id="latitude" type="hidden">
+                <input id="longitude" type="hidden">
+            </div>
+
+            <div class="form-grid">
+                <div class="field">
+                    <label for="severity">Severity</label>
+                    <select id="severity">
+                        <option>Critical</option>
+                        <option>Urgent</option>
+                        <option>Less Urgent</option>
+                        <option>Non-Urgent</option>
+                    </select>
+                </div>
+
+                <div class="field">
+                    <label for="trafficProfile">Traffic Profile</label>
+                    <select id="trafficProfile">
+                        <option value="normal">Normal</option>
+                        <option value="congested">Simulated Dynamic Traffic</option>
+                        <option value="dataset">Dataset Conditions</option>
+                        <option value="none">No Dynamic Conditions</option>
+                    </select>
+                </div>
+
+                <div class="field full">
+                    <label for="condition">Emergency Condition</label>
+                    <input id="condition" type="text">
+                </div>
+
+                <div class="field full">
+                    <label for="requiredFacility">Required Facility</label>
+                    <input id="requiredFacility" type="text">
+                </div>
+
+                <div class="field full">
+                    <label for="patientLocation">Patient Location / Zone</label>
+                    <input id="patientLocation" type="text">
+                </div>
+
+                <div class="field full">
+                    <label for="areaAddress">Area Address</label>
+                    <input id="areaAddress" type="text">
+                </div>
+            </div>
+
+            <div class="buttons">
+                <button id="sampleButton" class="secondary" type="button">
+                    Load Validated Sample
+                </button>
+
+                <button id="congestedButton" class="primary" type="button">
+                    Load Dynamic Traffic Test
+                </button>
+            </div>
+
+            <button id="runButton" class="primary" type="button"
+                    style="width:100%;margin-top:8px;">
+                Run Mode B Dispatch
+            </button>
+
+            <div id="runtimeInfo" class="info">
+                Initializing Mode B...
+            </div>
+        </div>
+
+        <!-- Dispatch results: same Mode A result-card structure -->
+        <div class="card">
+            <h2>Dispatch Result</h2>
+
+            <div id="resultGrid" class="result-grid">
+
+                <div class="result-box">
+                    <div class="result-label">Emergency ID</div>
+                    <div id="emergencyId" class="result-value">—</div>
+                </div>
+
+                <div class="result-box">
+                    <div class="result-label">Priority</div>
+                    <div id="priority" class="result-value">—</div>
+                </div>
+
+                <div class="result-box">
+                    <div class="result-label">Ambulance</div>
+                    <div id="ambulance" class="result-value">—</div>
+                </div>
+
+                <div class="result-box">
+                    <div class="result-label">Ambulance Type</div>
+                    <div id="ambulanceType" class="result-value">—</div>
+                </div>
+
+                <div class="result-box">
+                    <div class="result-label">Hospital</div>
+                    <div id="hospital" class="result-value">—</div>
+                </div>
+
+                <div class="result-box">
+                    <div class="result-label">Hospital Distance</div>
+                    <div id="hospitalDistance" class="result-value">—</div>
+                </div>
+
+                <div class="result-box">
+                    <div class="result-label">Total Static Route</div>
+                    <div id="totalStatic" class="result-value">—</div>
+                </div>
+
+                <div class="result-box">
+                    <div class="result-label">Total Selected Route</div>
+                    <div id="totalDynamic" class="result-value">—</div>
+                </div>
+
+                <div class="result-box">
+                    <div class="result-label">Traffic Profile</div>
+                    <div id="trafficStatus" class="result-value">—</div>
+                </div>
+
+                <div class="result-box">
+                    <div class="result-label">Dynamic Route Status</div>
+                    <div id="dynamicStatus" class="result-value">—</div>
+                </div>
+
+                <div class="result-box">
+                    <div class="result-label">Route Validation</div>
+                    <div id="routeValidation" class="result-value">—</div>
+                </div>
+
+                <div class="result-box">
+                    <div class="result-label">Processing Time</div>
+                    <div id="processingTime" class="result-value">—</div>
+                </div>
+            </div>
+
+            <div class="legs">
+                <div class="leg">
+                    <h3>Leg 1 — Ambulance → Patient</h3>
+
+                    <div class="leg-row">
+                        <span>Static route</span>
+                        <strong id="leg1Static">—</strong>
+                    </div>
+
+                    <div class="leg-row">
+                        <span>Selected route: Dynamic A*</span>
+                        <strong id="leg1Dynamic">—</strong>
+                    </div>
+
+                    <div class="leg-row">
+                        <span>Traffic</span>
+                        <strong id="leg1Traffic">—</strong>
+                    </div>
+
+                    <div class="leg-row">
+                        <span>Rerouted</span>
+                        <strong id="leg1Rerouted">—</strong>
+                    </div>
+                </div>
+
+                <div class="leg">
+                    <h3>Leg 2 — Patient → Hospital</h3>
+
+                    <div class="leg-row">
+                        <span>Static route</span>
+                        <strong id="leg2Static">—</strong>
+                    </div>
+
+                    <div class="leg-row">
+                        <span>Selected route: Time-aware A*</span>
+                        <strong id="leg2Dynamic">—</strong>
+                    </div>
+
+                    <div class="leg-row">
+                        <span>Traffic</span>
+                        <strong id="leg2Traffic">—</strong>
+                    </div>
+
+                    <div class="leg-row">
+                        <span>Rerouted</span>
+                        <strong id="leg2Rerouted">—</strong>
+                    </div>
+                </div>
+            </div>
+
+            <pre id="rawResult">No dispatch executed yet.</pre>
+        </div>
+    </div>
+
+    <!-- Full-width map: same position and styling as Mode A -->
+    <div class="card map-card">
+        <h2>Geographic Emergency Dispatch Map</h2>
+
+        <div id="dispatchMap"></div>
+
+        <div class="legend">
+            <div class="legend-item">
+                <span class="marker-blue"></span>
+                Ambulance
+            </div>
+
+            <div class="legend-item">
+                <span class="marker-red"></span>
+                Patient
+            </div>
+
+            <div class="legend-item">
+                <span class="marker-green"></span>
+                Hospital
+            </div>
+
+            <div class="legend-item">
+                <span class="line-static"></span>
+                Static A*
+            </div>
+
+            <div class="legend-item">
+                <span class="line-dynamic"></span>
+                Selected route (Dynamic A* / Time-aware A*)
+            </div>
+        </div>
+
+        <div class="map-note">
+            The base map is provided by OpenStreetMap.
+            Route lines are generated by the Mode B road graph
+            and its Static A*, Dynamic A*, and Time-aware A* algorithms.
+        </div>
+    </div>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="/assets/dashboard.js"></script>
+</body>
+</html>

@@ -1,0 +1,27 @@
+{
+  "description": "Dynamic road-condition layer for emergency route optimization",
+  "source_graph": "routing/tamil_nadu_graph.json",
+  "conditions": [
+    {
+      "from": "V1",
+      "to": "V2",
+      "status": "normal",
+      "cost_multiplier": 1.0,
+      "reason": "Normal road condition"
+    },
+    {
+      "from": "V3",
+      "to": "V4",
+      "status": "congested",
+      "cost_multiplier": 2.0,
+      "reason": "Heavy traffic"
+    },
+    {
+      "from": "V3",
+      "to": "V169522",
+      "status": "blocked",
+      "cost_multiplier": null,
+      "reason": "Road blockage"
+    }
+  ]
+}

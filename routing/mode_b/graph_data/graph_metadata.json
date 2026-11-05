@@ -1,0 +1,32 @@
+﻿{
+  "format": "CSR (Compressed Sparse Row)",
+  "vertex_count": 1740900,
+  "adjacency_source_count": 1740812,
+  "directed_edge_count": 4371055,
+  "node_ids": "Vn maps to zero-based index n-1",
+  "edge_target_dtype": "int32 zero-based vertex indices",
+  "edge_distance_dtype": "float32 kilometres",
+  "edge_highway_codes_file": "edge_highway_codes.npy",
+  "edge_highway_code_dtype": "uint8",
+  "highway_code_to_name": {
+    "0": "road",
+    "1": "motorway",
+    "2": "motorway_link",
+    "3": "trunk",
+    "4": "trunk_link",
+    "5": "primary",
+    "6": "primary_link",
+    "7": "secondary",
+    "8": "secondary_link",
+    "9": "tertiary",
+    "10": "tertiary_link",
+    "11": "unclassified",
+    "12": "residential",
+    "13": "living_street",
+    "14": "service"
+  },
+  "indptr_dtype": "int64",
+  "graph_file_size_bytes": 493112555,
+  "graph_file_mtime_ns": 1790261276012433500,
+  "graph_source": "routing/tamil_nadu_graph.json"
+}

@@ -1,0 +1,7 @@
+﻿cff-version: 1.2.0
+message: "If you use this software, please cite it using the metadata in this file."
+type: software
+title: "Ambulance and Hospital Coordination System for Emergency Medical Response - Mode B"
+authors:
+  - name: "Sanjey S"
+repository-code: "https://github.com/SSanjey/ambulance-hospital-coordination-mode-b"

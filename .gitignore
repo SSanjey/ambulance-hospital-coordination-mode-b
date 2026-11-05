@@ -1,0 +1,37 @@
+﻿__pycache__/
+*.py[cod]
+*$py.class
+
+.venv/
+venv/
+env/
+ENV/
+
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+.env
+.env.*
+!.env.example
+
+*.log
+*.tmp
+*.bak
+*.orig
+*.rej
+
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Data withheld pending privacy and redistribution review
+data/ambulances (2).csv
+results/wowsome_verification/tamil_nadu_government_facilities_11494.csv
+
+# Data withheld pending privacy and redistribution review
+data/ambulances (2).csv
+results/wowsome_verification/tamil_nadu_government_facilities_11494.csv
